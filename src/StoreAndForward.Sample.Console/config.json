@@ -1,0 +1,31 @@
+﻿{
+  /* Number of times to retry sending  */
+  "retry_limit": 3,
+
+  /* Interval in minutes between retries */
+  "send_interval_in_minutes": 10,
+
+  /* Thumbprint of certificate for connecting to the My Health Record */
+  "certificate_thumbprint": "0abe023fa4100a6a78c8903eb6f63849306fe462",
+
+  /* My Health Record uploadDocument endpoint */
+  "upload_document_endpoint": "https://b2b.ehealthvendortest.health.gov.au/uploadDocument",
+
+  /* Healthcare facility */
+  "healthcare_facility": "AgedCareResidentialServices",
+
+  /* Practice setting */
+  "practice_setting": "AcupunctureService",
+
+  /* Client system type */
+  "client_system_type": "CIS",
+
+  /* MyHealthRecord header */
+  "product_info": {
+    "platform": "Windows 7",
+    "name": "Test Harness",
+    "version": "1.0",
+    "vendor": "ADHA"
+  }
+}
+
