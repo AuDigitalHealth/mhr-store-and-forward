@@ -193,6 +193,7 @@
     <Compile Include="Models\EventModel.cs" />
     <Compile Include="Models\EventListModel.cs" />
     <Compile Include="Controllers\StoreAndForwardController.cs" />
+    <Compile Include="Models\PagedListModel.cs" />
     <Compile Include="Models\TimelineEventModel.cs" />
     <Compile Include="Models\TimelineModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

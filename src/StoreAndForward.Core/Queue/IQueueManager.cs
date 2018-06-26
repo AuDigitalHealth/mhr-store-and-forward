@@ -31,6 +31,8 @@ namespace DigitalHealth.StoreAndForward.Core.Queue
         /// </summary>
         /// <param name="id">ID of the document.</param>
         /// <returns></returns>
+        /// <exception cref="ArgumentException">ID does not exist</exception>
+        /// <exception cref="InvalidOperationException">Document is not in the 'Pending' state</exception>
         Task DeleteDocumentFromQueue(int id);
 
         /// <summary>
@@ -48,8 +50,8 @@ namespace DigitalHealth.StoreAndForward.Core.Queue
         /// <param name="to">To date.</param>
         /// <param name="offset">Paging offset.</param>
         /// <param name="limit">Paging limit.</param>
-        /// <returns>List of documents matching the filter.</returns>
-        Task<IList<DocumentEntity>> GetDocumentQueueList(IList<DocumentStatus> statusList, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null);
+        /// <returns>Paged list of documents matching the filter.</returns>
+        Task<PagedList<DocumentEntity>> GetDocumentQueueList(IList<DocumentStatus> statusList, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null);
 
         /// <summary>
         /// Gets all the queue events matching the filter.
@@ -59,8 +61,8 @@ namespace DigitalHealth.StoreAndForward.Core.Queue
         /// <param name="to">To date.</param>
         /// <param name="offset">Paging offset.</param>
         /// <param name="limit">Paging limit.</param>
-        /// <returns></returns>
-        Task<IList<EventEntity>> GetQueueActivityTimeline(IList<EventType> eventTypeList, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null);
+        /// <returns>Paged list of event entities.</returns>
+        Task<PagedList<EventEntity>> GetQueueActivityTimeline(IList<EventType> eventTypeList, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null);
 
         /// <summary>
         /// Sends all documents in the queue. Note this method is not thread safe.

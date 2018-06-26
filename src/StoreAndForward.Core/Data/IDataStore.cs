@@ -64,7 +64,7 @@ namespace DigitalHealth.StoreAndForward.Core.Data
         /// <param name="offset">Paging offset.</param>
         /// <param name="limit">Paging limit.</param>
         /// <returns></returns>
-        Task<IList<DocumentEntity>> FilterDocuments(IList<DocumentStatus> documentStatusList, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null);
+        Task<PagedList<DocumentEntity>> FilterDocuments(IList<DocumentStatus> documentStatusList, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null);
 
         /// <summary>
         /// Filters events.
@@ -75,6 +75,6 @@ namespace DigitalHealth.StoreAndForward.Core.Data
         /// <param name="offset"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        Task<IList<EventEntity>> FilterEvents(IList<EventType> eventTypeList = null, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null);        
+        Task<PagedList<EventEntity>> FilterEvents(IList<EventType> eventTypeList = null, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null);        
     }
 }

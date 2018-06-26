@@ -27,9 +27,15 @@ namespace DigitalHealth.StoreAndForward.Client.Models
         /// <summary>
         /// Initializes a new instance of the TimelineModel class.
         /// </summary>
+        /// <param name="total">Total.</param>
+        /// <param name="limit">Limit.</param>
+        /// <param name="offset">Offset.</param>
         /// <param name="timelineEvents">Timeline events.</param>
-        public TimelineModel(IList<TimelineEventModel> timelineEvents = default(IList<TimelineEventModel>))
+        public TimelineModel(int? total = default(int?), int? limit = default(int?), int? offset = default(int?), IList<TimelineEventModel> timelineEvents = default(IList<TimelineEventModel>))
         {
+            Total = total;
+            Limit = limit;
+            Offset = offset;
             TimelineEvents = timelineEvents;
             CustomInit();
         }
@@ -38,6 +44,24 @@ namespace DigitalHealth.StoreAndForward.Client.Models
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>
         partial void CustomInit();
+
+        /// <summary>
+        /// Gets or sets total.
+        /// </summary>
+        [JsonProperty(PropertyName = "total")]
+        public int? Total { get; set; }
+
+        /// <summary>
+        /// Gets or sets limit.
+        /// </summary>
+        [JsonProperty(PropertyName = "limit")]
+        public int? Limit { get; set; }
+
+        /// <summary>
+        /// Gets or sets offset.
+        /// </summary>
+        [JsonProperty(PropertyName = "offset")]
+        public int? Offset { get; set; }
 
         /// <summary>
         /// Gets or sets timeline events.

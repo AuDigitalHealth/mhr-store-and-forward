@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using DigitalHealth.StoreAndForward.Core;
 using DigitalHealth.StoreAndForward.Core.Data.Entities;
 using DigitalHealth.StoreAndForward.Core.Data.Entities.Enums;
 using DigitalHealth.StoreAndForward.Core.Queue;
@@ -83,7 +84,7 @@ namespace DigitalHealth.StoreAndForward.Owin.Controllers
                 return BadRequest($"'start_date' date '{start_date}' must be larger than 'end_date' date '{end_date}'");
             }
 
-            IList<DocumentEntity> documents;
+            PagedList<DocumentEntity> documents;
             try
             {
                 documents = await _queueManager.GetDocumentQueueList(documentStatusList, start_date, end_date, offset, limit);
@@ -296,7 +297,7 @@ namespace DigitalHealth.StoreAndForward.Owin.Controllers
                 return BadRequest($"'start_date' date '{start_date}' must be larger than 'end_date' date '{end_date}'");
             }
 
-            IList<EventEntity> events;
+            PagedList<EventEntity> events;
             try
             {
                 events = await _queueManager.GetQueueActivityTimeline(eventTypeList, start_date, end_date, offset, limit);
@@ -309,18 +310,24 @@ namespace DigitalHealth.StoreAndForward.Owin.Controllers
             return Ok(MapEventsToTimeline(events));
         }
 
-        private DocumentListModel MapDocumentsToDocumentList(IList<DocumentEntity> documentEntities)
+        private DocumentListModel MapDocumentsToDocumentList(PagedList<DocumentEntity> documentEntities)
         {
             return new DocumentListModel
-            {
-                Documents = documentEntities.Select(MapDocumentEntityToDocumentReference).ToList()
+            {                
+                Offset = documentEntities.Offset,
+                Limit = documentEntities.Limit,
+                Total = documentEntities.Total,                
+                Documents = documentEntities.Select(MapDocumentEntityToDocumentReference).ToList(),
             };
         }
 
-        private TimelineModel MapEventsToTimeline(IList<EventEntity> eventEntities)
+        private TimelineModel MapEventsToTimeline(PagedList<EventEntity> eventEntities)
         {
             return new TimelineModel
             {
+                Offset = eventEntities.Offset,
+                Limit = eventEntities.Limit,
+                Total = eventEntities.Total,
                 TimelineEvents = eventEntities.Select(MapEventToTimelineEvent).ToList()
             };
         }

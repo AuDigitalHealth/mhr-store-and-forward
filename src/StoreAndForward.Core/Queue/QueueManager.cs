@@ -38,11 +38,11 @@ namespace DigitalHealth.StoreAndForward.Core.Queue
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="dataStore"></param>
-        /// <param name="mhrDocumentUploadClient"></param>
-        /// <param name="notificationService"></param>
-        /// <param name="cdaPackageService"></param>
-        /// <param name="retryLimit"></param>
+        /// <param name="dataStore">Data store.</param>
+        /// <param name="mhrDocumentUploadClient">MHR upload client.</param>
+        /// <param name="notificationService">Notification service.</param>
+        /// <param name="cdaPackageService">CDA package service.</param>
+        /// <param name="retryLimit">Retry limit.</param>
         public QueueManager(IDataStore dataStore, IMhrDocumentUploadClient mhrDocumentUploadClient, INotificationService notificationService, 
             ICdaPackageService cdaPackageService, int retryLimit = 3)
         {
@@ -56,8 +56,8 @@ namespace DigitalHealth.StoreAndForward.Core.Queue
         /// <summary>
         /// Get a document.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">Document ID.</param>
+        /// <returns>Document when the ID exists otherwise null.</returns>
         public async Task<DocumentEntity> GetDocument(int id)
         {
             if (id <= 0)
@@ -69,15 +69,15 @@ namespace DigitalHealth.StoreAndForward.Core.Queue
         }
 
         /// <summary>
-        /// View all events.
+        /// Get all events.
         /// </summary>
-        /// <param name="eventTypeList"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="offset"></param>
-        /// <param name="limit"></param>
-        /// <returns></returns>
-        public async Task<IList<EventEntity>> GetQueueActivityTimeline(IList<EventType> eventTypeList, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null)
+        /// <param name="eventTypeList">List of event types.</param>
+        /// <param name="from">From date.</param>
+        /// <param name="to">To date.</param>
+        /// <param name="offset">Paging offset.</param>
+        /// <param name="limit">Paging limit.</param>
+        /// <returns>Paged list of event entities.</returns>
+        public async Task<PagedList<EventEntity>> GetQueueActivityTimeline(IList<EventType> eventTypeList, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null)
         {
             if (offset.HasValue && offset < 0)
             {
@@ -98,10 +98,10 @@ namespace DigitalHealth.StoreAndForward.Core.Queue
         }
 
         /// <summary>
-        /// View document event history.
+        /// Get document event history.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">Document ID.</param>
+        /// <returns>List of event entities.</returns>
         public async Task<IList<EventEntity>> GetDocumentEventHistory(int id)
         {
             if (id <= 0)
@@ -119,12 +119,14 @@ namespace DigitalHealth.StoreAndForward.Core.Queue
         /// <returns></returns>
         public async Task DeleteDocumentFromQueue(int id)
         {
+            // Get the document
             DocumentEntity documentToDelete = await _dataStore.GetDocument(id);
             if (documentToDelete == null)
             {
                 throw new ArgumentException($"Document with ID '{id}' does not exist");
             }
 
+            // Document can only be deleted in the pending state
             if (documentToDelete.Status != DocumentStatus.Pending)
             {
                 throw new InvalidOperationException($"Document with ID '{documentToDelete.DocumentId}' must be in the '{DocumentStatus.Pending.ToString()}' state to be deleted but is in the '{documentToDelete.Status.ToString()}' state");
@@ -145,13 +147,13 @@ namespace DigitalHealth.StoreAndForward.Core.Queue
         /// <summary>
         /// Get document list.
         /// </summary>
-        /// <param name="documentStatusList"></param>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="offset"></param>
-        /// <param name="limit"></param>
+        /// <param name="documentStatusList">Document status list.</param>
+        /// <param name="from">From date.</param>
+        /// <param name="to">To date.</param>
+        /// <param name="offset">Paging offset.</param>
+        /// <param name="limit">Limit offset.</param>
         /// <returns></returns>
-        public async Task<IList<DocumentEntity>> GetDocumentQueueList(IList<DocumentStatus> documentStatusList, DateTime? from = null, DateTime? to = null,
+        public async Task<PagedList<DocumentEntity>> GetDocumentQueueList(IList<DocumentStatus> documentStatusList, DateTime? from = null, DateTime? to = null,
             int? offset = null, int? limit = null)
         {
             if (offset.HasValue && offset < 0)
@@ -166,20 +168,19 @@ namespace DigitalHealth.StoreAndForward.Core.Queue
 
             if (from.HasValue && to.HasValue && from > to)
             {
-                throw new ArgumentException($"'from' date '{from}' must be larger than 'to' date '{to}'");
+                throw new ArgumentException($"'to' date '{to}' must be larger than 'from' date '{from}'");
             }
 
-            IList<DocumentEntity> documentEntities = await _dataStore.FilterDocuments(documentStatusList, from, to, offset, limit);
+            PagedList<DocumentEntity> documentEntities = await _dataStore.FilterDocuments(documentStatusList, @from, to, offset, limit);
 
             return documentEntities;
         }
 
-
         /// <summary>
         /// Adds a document to the queue.
         /// </summary>
-        /// <param name="queueDocumentData"></param>
-        /// <returns></returns>
+        /// <param name="queueDocumentData">Queue document data.</param>
+        /// <returns>Created document entity.</returns>
         public async Task<DocumentEntity> AddDocumentToQueue(QueueDocumentData queueDocumentData)
         {            
             // Validate the document

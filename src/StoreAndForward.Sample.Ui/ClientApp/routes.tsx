@@ -10,5 +10,5 @@ export const routes = <MainLayout>
     <Route exact path='/' component={DocumentQueue} />
     <Route exact path='/timeline' component={Timeline} />
     <Route exact path='/upload' component={UpdateDocument} />
-    <Route exact path='/Documents/:id?' component={DocumentView} />
+    <Route exact path='/documents/:id?' component={DocumentView} />
 </MainLayout>;

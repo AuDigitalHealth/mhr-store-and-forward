@@ -6,7 +6,7 @@ namespace DigitalHealth.StoreAndForward.Owin.Models
     /// <summary>
     /// Timeline model.
     /// </summary>
-    public class TimelineModel
+    public class TimelineModel : PagedListModel
     {
         /// <summary>
         /// Timeline events.

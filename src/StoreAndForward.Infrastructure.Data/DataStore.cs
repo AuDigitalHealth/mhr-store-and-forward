@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using DigitalHealth.StoreAndForward.Core;
 using DigitalHealth.StoreAndForward.Core.Data;
 using DigitalHealth.StoreAndForward.Core.Data.Entities;
 using DigitalHealth.StoreAndForward.Core.Data.Entities.Enums;
@@ -59,7 +60,8 @@ namespace DigitalHealth.StoreAndForward.Infrastructure.Data
         /// <param name="offset">Paging offset.</param>
         /// <param name="limit">Limit offset.</param>
         /// <returns>List of documents.</returns>
-        public async Task<IList<DocumentEntity>> FilterDocuments(IList<DocumentStatus> documentStatusList, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null)
+        public async Task<PagedList<DocumentEntity>> FilterDocuments(IList<DocumentStatus> documentStatusList, DateTime? from = null, 
+            DateTime? to = null, int? offset = null, int? limit = null)
         {
             var filterPredicate = PredicateBuilder.New<DocumentEntity>(true);
 
@@ -94,13 +96,18 @@ namespace DigitalHealth.StoreAndForward.Infrastructure.Data
                 limit = 10;
             }
 
-            return await _storeAndForwardDbContext.Documents.AsExpandable()
+            int total = await _storeAndForwardDbContext.Documents.AsExpandable()
+                .Where(filterPredicate).CountAsync();
+
+            List<DocumentEntity> documentEntities = await _storeAndForwardDbContext.Documents.AsExpandable()
                 .Where(filterPredicate)
                 .OrderByDescending(d => d.QueueDate)
                 .Skip(offset.Value)
                 .Take(limit.Value)
                 .Include(e => e.Events)
                 .ToListAsync();
+
+            return new PagedList<DocumentEntity>(documentEntities, total, offset.Value, limit.Value);
         }
 
         /// <summary>
@@ -155,7 +162,7 @@ namespace DigitalHealth.StoreAndForward.Infrastructure.Data
         /// <param name="offset">Paging offset.</param>
         /// <param name="limit">Paging limit.</param>
         /// <returns>List of events.</returns>
-        public async Task<IList<EventEntity>> FilterEvents(IList<EventType> eventTypeList, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null)
+        public async Task<PagedList<EventEntity>> FilterEvents(IList<EventType> eventTypeList, DateTime? from = null, DateTime? to = null, int? offset = null, int? limit = null)
         {
             var filterPredicate = PredicateBuilder.New<EventEntity>(true);
 
@@ -190,14 +197,18 @@ namespace DigitalHealth.StoreAndForward.Infrastructure.Data
                 limit = 10;
             }
 
-            return await _storeAndForwardDbContext.Events
-                .AsExpandable()
+            int total = await _storeAndForwardDbContext.Events.AsExpandable()
+                .Where(filterPredicate).CountAsync();
+
+            List<EventEntity> eventEntities = await _storeAndForwardDbContext.Events.AsExpandable()
                 .Where(filterPredicate)
                 .OrderByDescending(x => x.EventDate)
                 .Skip(offset.Value)
                 .Take(limit.Value)
                 .Include(e => e.Document)
                 .ToListAsync();
+
+            return new PagedList<EventEntity>(eventEntities, total, offset.Value, limit.Value);
         }
 
 

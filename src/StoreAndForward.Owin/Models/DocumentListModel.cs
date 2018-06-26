@@ -6,7 +6,7 @@ namespace DigitalHealth.StoreAndForward.Owin.Models
     /// <summary>
     /// Document list model.
     /// </summary>
-    public class DocumentListModel
+    public class DocumentListModel : PagedListModel
     {
         /// <summary>
         /// Document list.
