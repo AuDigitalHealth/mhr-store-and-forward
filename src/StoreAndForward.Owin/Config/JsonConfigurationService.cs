@@ -16,8 +16,6 @@ namespace DigitalHealth.StoreAndForward.Owin.Config
     {
         private readonly StoreAndForwardConfiguration _storeAndForwardConfiguration;
 
-        private readonly X509Certificate2 _certificate;
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -29,7 +27,7 @@ namespace DigitalHealth.StoreAndForward.Owin.Config
             Log.Information("Store and forward configuration {configuration}", configuration);
             _storeAndForwardConfiguration = JsonConvert.DeserializeObject<StoreAndForwardConfiguration>(configuration);
 
-            // Load the certificate from the local store using the thumbprint (Local / My)
+            // Load the certificate from the local store using the thumbprint (Local / My) for use with the MHR upload
             using (X509Store x509Store = new X509Store(StoreName.My, StoreLocation.LocalMachine))
             {
                 x509Store.Open(OpenFlags.ReadOnly);
@@ -37,9 +35,9 @@ namespace DigitalHealth.StoreAndForward.Owin.Config
                 X509Certificate2Collection certificates = x509Store.Certificates.Find(X509FindType.FindByThumbprint,
                     _storeAndForwardConfiguration.certificate_thumbprint, true);
 
-                _certificate = certificates[0];
+                Certificate = certificates[0];
 
-                Log.Information("Loaded certificate with subject '{subject}'", _certificate.Subject);
+                Log.Information("Loaded certificate with subject '{subject}'", Certificate.Subject);
             }
 
             // Upload metadata
@@ -59,7 +57,7 @@ namespace DigitalHealth.StoreAndForward.Owin.Config
         /// <summary>
         /// Certificate used when connecting to the MHR.
         /// </summary>
-        public X509Certificate2 Certificate => _certificate;
+        public X509Certificate2 Certificate { get; }
 
         /// <summary>
         /// MHR upload endpoint.

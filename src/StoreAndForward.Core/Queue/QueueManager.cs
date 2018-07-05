@@ -356,6 +356,7 @@ namespace DigitalHealth.StoreAndForward.Core.Queue
                 // Add an event
                 await _dataStore.AddEvent(document, newEventType.Value, newEventMessage);
 
+                // Set the status
                 document.Status = newDocumentStatus.Value;
 
                 // Update the document

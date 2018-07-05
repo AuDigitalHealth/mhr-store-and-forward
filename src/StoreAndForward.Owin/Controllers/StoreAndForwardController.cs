@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DigitalHealth.StoreAndForward.Core;
+using DigitalHealth.StoreAndForward.Core.Data;
 using DigitalHealth.StoreAndForward.Core.Data.Entities;
 using DigitalHealth.StoreAndForward.Core.Data.Entities.Enums;
 using DigitalHealth.StoreAndForward.Core.Queue;

@@ -47,7 +47,8 @@ namespace DigitalHealth.StoreAndForward.Owin.Errors
         {
             return JObject.FromObject(errorResponse, new JsonSerializer
             {
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented
             });
         }
     }

@@ -74,7 +74,7 @@
     <Compile Include="Mhr\Validators\DocumentUploadRequestValidator.cs" />
     <Compile Include="Package\ICdaPackageService.cs" />
     <Compile Include="Package\Models\CdaPackageData.cs" />
-    <Compile Include="PagedList.cs" />
+    <Compile Include="Data\PagedList.cs" />
     <Compile Include="Queue\Models\QueueDocumentData.cs" />
     <Compile Include="Mhr\Models\DocumentUploadResultStatus.cs" />
     <Compile Include="Mhr\Models\DocumentUploadRequest.cs" />

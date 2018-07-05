@@ -42,7 +42,7 @@ namespace DigitalHealth.StoreAndForward.Infrastructure.Data
         /// <summary>
         /// Gets a document with the document OID.
         /// </summary>
-        /// <param name="documentOid"></param>
+        /// <param name="documentOid">Document OID.</param>
         /// <returns>Document.</returns>
         public async Task<DocumentEntity> GetDocument(string documentOid)
         {
@@ -101,7 +101,7 @@ namespace DigitalHealth.StoreAndForward.Infrastructure.Data
 
             List<DocumentEntity> documentEntities = await _storeAndForwardDbContext.Documents.AsExpandable()
                 .Where(filterPredicate)
-                .OrderByDescending(d => d.QueueDate)
+                .OrderBy(d => d.QueueDate)
                 .Skip(offset.Value)
                 .Take(limit.Value)
                 .Include(e => e.Events)
@@ -113,7 +113,7 @@ namespace DigitalHealth.StoreAndForward.Infrastructure.Data
         /// <summary>
         /// Adds a document.
         /// </summary>
-        /// <param name="documentEntity"></param>
+        /// <param name="documentEntity">Document entity.</param>
         /// <returns></returns>
         public async Task<DocumentEntity> AddDocument(DocumentEntity documentEntity)
         {
@@ -127,7 +127,7 @@ namespace DigitalHealth.StoreAndForward.Infrastructure.Data
         /// <summary>
         /// Updates a document.
         /// </summary>
-        /// <param name="documentEntity"></param>
+        /// <param name="documentEntity">Document entity.</param>
         /// <returns></returns>
         public async Task UpdateDocument(DocumentEntity documentEntity)
         {
@@ -202,7 +202,7 @@ namespace DigitalHealth.StoreAndForward.Infrastructure.Data
 
             List<EventEntity> eventEntities = await _storeAndForwardDbContext.Events.AsExpandable()
                 .Where(filterPredicate)
-                .OrderByDescending(x => x.EventDate)
+                .OrderBy(x => x.EventDate)
                 .Skip(offset.Value)
                 .Take(limit.Value)
                 .Include(e => e.Document)
@@ -215,8 +215,8 @@ namespace DigitalHealth.StoreAndForward.Infrastructure.Data
         /// <summary>
         /// Filter events for a given document.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <param name="id">Document ID</param>
+        /// <returns>List of document events.</returns>
         public async Task<IList<EventEntity>> GetDocumentEvents(int id)
         {
             return await _storeAndForwardDbContext.Events

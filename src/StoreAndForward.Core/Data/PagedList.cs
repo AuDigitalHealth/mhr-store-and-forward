@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DigitalHealth.StoreAndForward.Core
+namespace DigitalHealth.StoreAndForward.Core.Data
 {
     /// <summary>
     /// Paged list of items.
